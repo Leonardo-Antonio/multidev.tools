@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* ── Workbench surfaces ── */
+  --base: #0f1117;
+  --surface-50: #13151d;
+  --surface-100: #181a24;
+  --surface-200: #1e2130;
+  --surface-300: #252838;
+  --surface-alt: #0c0d13;
+
+  /* ── Foreground / text hierarchy ── */
+  --ink-primary: #e4e4e9;
+  --ink-secondary: #a1a1b5;
+  --ink-tertiary: #6b6b80;
+  --ink-muted: #44445a;
+
+  /* ── Borders ── */
+  --edge: rgba(255, 255, 255, 0.06);
+  --edge-subtle: rgba(255, 255, 255, 0.03);
+  --edge-strong: rgba(255, 255, 255, 0.12);
+  --edge-focus: rgba(232, 166, 52, 0.5);
+
+  /* ── Accent: ámbar workshop lamp ── */
+  --amber: #e8a634;
+  --amber-dim: #c88a20;
+  --amber-glow: rgba(232, 166, 52, 0.12);
+  --amber-ghost: rgba(232, 166, 52, 0.06);
+
+  /* ── Semantic ── */
+  --electric: #5b9bf5;
+  --electric-dim: rgba(91, 155, 245, 0.15);
+  --mint: #4ade80;
+  --mint-dim: rgba(74, 222, 128, 0.12);
+  --brick: #f07178;
+  --brick-dim: rgba(240, 113, 120, 0.12);
+
+  /* ── Diff-specific ── */
+  --diff-add-bg: rgba(74, 222, 128, 0.08);
+  --diff-add-border: rgba(74, 222, 128, 0.20);
+  --diff-add-text: #6ee7a0;
+  --diff-del-bg: rgba(240, 113, 120, 0.08);
+  --diff-del-border: rgba(240, 113, 120, 0.20);
+  --diff-del-text: #f5999e;
+
+  /* ── Typography ── */
+  --font-ui: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  --text-xs: 0.6875rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+
+  /* ── Spacing (8px base) ── */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+
+  /* ── Radius ── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* ── Transitions ── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-ui);
+  background: var(--base);
+  color: var(--ink-primary);
+  line-height: 1.5;
+  min-height: 100dvh;
+}
+
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+::selection {
+  background: var(--amber-glow);
+  color: var(--amber);
+}
+
+:focus-visible {
+  outline: 2px solid var(--edge-focus);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--edge-strong);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+textarea,
+pre,
+code {
+  font-family: var(--font-mono);
+}
+
+textarea {
+  resize: none;
+}
+
+button {
+  font-family: var(--font-ui);
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
