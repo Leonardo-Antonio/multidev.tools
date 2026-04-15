@@ -12,15 +12,15 @@ import { AdUnit } from './components/AdUnit'
 
 type Tool = 'formatter' | 'diff' | 'converter' | 'jwt' | 'base64' | 'regex' | 'sql' | 'uuid'
 
-const tools: { id: Tool; label: string; icon: string; key: string }[] = [
-  { id: 'formatter', label: 'JSON Format', icon: '{ }', key: '1' },
-  { id: 'diff', label: 'Diff', icon: '< >', key: '2' },
-  { id: 'converter', label: 'JSON → Class', icon: '⬡', key: '3' },
-  { id: 'jwt', label: 'JWT Decode', icon: '⚿', key: '4' },
-  { id: 'base64', label: 'Base64', icon: '⇌', key: '5' },
-  { id: 'regex', label: 'Regex', icon: '.*', key: '6' },
-  { id: 'sql', label: 'SQL Format', icon: '⊞', key: '7' },
-  { id: 'uuid', label: 'UUID', icon: '#', key: '8' },
+const tools: { id: Tool; label: string; icon: string; key: string; description: string }[] = [
+  { id: 'formatter', label: 'JSON Format', icon: '{ }', key: '1', description: 'Parse, pretty-print with 2 or 4 space indentation, and minify JSON. Includes syntax highlighting for keys, strings, numbers, and booleans.' },
+  { id: 'diff', label: 'Diff', icon: '< >', key: '2', description: 'Compare two texts side by side. See additions, deletions, and unchanged lines with a clear color-coded diff output.' },
+  { id: 'converter', label: 'JSON → Class', icon: '⬡', key: '3', description: 'Convert JSON objects into TypeScript interfaces or Python dataclasses. Automatically infers types including nested objects and arrays.' },
+  { id: 'jwt', label: 'JWT Decode', icon: '⚿', key: '4', description: 'Decode JSON Web Tokens to inspect the header, payload, and signature. Check expiration status at a glance.' },
+  { id: 'base64', label: 'Base64', icon: '⇌', key: '5', description: 'Encode text to Base64 or decode Base64 strings back to plain text. Supports automatic image preview for Base64-encoded images.' },
+  { id: 'regex', label: 'Regex', icon: '.*', key: '6', description: 'Write and test regular expressions with real-time highlighting of matches. View capture groups and toggle flags like global, case-insensitive, and multiline.' },
+  { id: 'sql', label: 'SQL Format', icon: '⊞', key: '7', description: 'Format and beautify raw SQL queries. Adds proper indentation and keyword highlighting for better readability.' },
+  { id: 'uuid', label: 'UUID', icon: '#', key: '8', description: 'Generate random v4 UUIDs in bulk. Click any UUID to copy it to your clipboard instantly.' },
 ]
 
 function App() {
@@ -45,6 +45,8 @@ function App() {
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [])
+
+  const activeToolData = tools.find(t => t.id === activeTool)!
 
   return (
     <div className="app">
@@ -73,36 +75,67 @@ function App() {
         </div>
       </header>
 
-      <div className="app-body">
-        <aside className="ad-sidebar ad-sidebar--left">
-          <AdUnit slot="sidebarLeft" format="vertical" />
-        </aside>
+      <section className="hero">
+        <div className="hero-inner">
+          <h1>Free Online Developer Tools</h1>
+          <p>
+            DevForge is a free, open collection of browser-based tools for developers.
+            Format JSON, compare text diffs, decode JWTs, encode Base64, test regex patterns,
+            format SQL queries, and generate UUIDs — all without sending data to any server.
+            Your data stays in your browser, always.
+          </p>
+        </div>
+      </section>
 
-        <main className="main">
-          <div className="tool-panel" key={activeTool}>
-            {activeTool === 'formatter' && <JsonFormatter onCopy={showToast} />}
-            {activeTool === 'diff' && <DiffTool onCopy={showToast} />}
-            {activeTool === 'converter' && <JsonToClass onCopy={showToast} />}
-            {activeTool === 'jwt' && <JwtDecoder onCopy={showToast} />}
-            {activeTool === 'base64' && <Base64Tool onCopy={showToast} />}
-            {activeTool === 'regex' && <RegexTester onCopy={showToast} />}
-            {activeTool === 'sql' && <SqlFormatter onCopy={showToast} />}
-            {activeTool === 'uuid' && <UuidGenerator onCopy={showToast} />}
+      <main className="main">
+        <div className="tool-description">
+          <h2>{activeToolData.icon} {activeToolData.label}</h2>
+          <p>{activeToolData.description}</p>
+        </div>
+
+        <div className="tool-panel" key={activeTool}>
+          {activeTool === 'formatter' && <JsonFormatter onCopy={showToast} />}
+          {activeTool === 'diff' && <DiffTool onCopy={showToast} />}
+          {activeTool === 'converter' && <JsonToClass onCopy={showToast} />}
+          {activeTool === 'jwt' && <JwtDecoder onCopy={showToast} />}
+          {activeTool === 'base64' && <Base64Tool onCopy={showToast} />}
+          {activeTool === 'regex' && <RegexTester onCopy={showToast} />}
+          {activeTool === 'sql' && <SqlFormatter onCopy={showToast} />}
+          {activeTool === 'uuid' && <UuidGenerator onCopy={showToast} />}
+        </div>
+
+        <div className="ad-bottom">
+          <AdUnit slot="bottomDesktop" format="horizontal" />
+        </div>
+      </main>
+
+      <footer className="footer">
+        <div className="footer-inner">
+          <div className="footer-about">
+            <h3>About DevForge</h3>
+            <p>
+              DevForge provides essential developer utilities that run entirely in your browser.
+              No sign-up required, no data collection, no server-side processing. Built for developers
+              who value speed, privacy, and simplicity in their daily workflow.
+            </p>
           </div>
-
-          <div className="ad-bottom-desktop">
-            <AdUnit slot="bottomDesktop" format="horizontal" />
+          <div className="footer-tools">
+            <h3>Tools</h3>
+            <ul>
+              {tools.map(tool => (
+                <li key={tool.id}>
+                  <button onClick={() => setActiveTool(tool.id)}>
+                    {tool.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
-        </main>
-
-        <aside className="ad-sidebar ad-sidebar--right">
-          <AdUnit slot="sidebarRight" format="vertical" />
-        </aside>
-      </div>
-
-      <div className="ad-bottom-mobile">
-        <AdUnit slot="bottomMobile" format="horizontal" />
-      </div>
+          <div className="footer-bottom">
+            <p>&copy; {new Date().getFullYear()} DevForge. All tools run client-side — your data never leaves your browser.</p>
+          </div>
+        </div>
+      </footer>
 
       {toast && <div className="copied-toast">{toast}</div>}
     </div>

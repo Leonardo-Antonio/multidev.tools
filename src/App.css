@@ -5,11 +5,51 @@
   min-height: 100dvh;
 }
 
-/* ── App Body (3-column ad layout) ── */
-.app-body {
-  display: flex;
-  flex: 1;
-  min-height: 0;
+/* ── Hero Section ── */
+.hero {
+  border-bottom: 1px solid var(--edge);
+  background: var(--surface-50);
+  padding: var(--sp-6) var(--sp-6);
+}
+
+.hero-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  font-family: var(--font-ui);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--ink-primary);
+  margin-bottom: var(--sp-2);
+  letter-spacing: -0.02em;
+}
+
+.hero p {
+  font-size: var(--text-sm);
+  color: var(--ink-secondary);
+  line-height: 1.7;
+  max-width: 720px;
+}
+
+/* ── Tool Description ── */
+.tool-description {
+  margin-bottom: var(--sp-4);
+}
+
+.tool-description h2 {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--ink-primary);
+  margin-bottom: var(--sp-1);
+}
+
+.tool-description p {
+  font-size: var(--text-sm);
+  color: var(--ink-tertiary);
+  line-height: 1.6;
 }
 
 /* ── Header / Tool Rack ── */
@@ -987,65 +1027,93 @@ mark.regex-match {
   color: var(--ink-tertiary);
 }
 
-/* ── Ad Sections ── */
-.ad-sidebar {
-  width: 160px;
-  flex-shrink: 0;
-  padding: var(--sp-4) var(--sp-2);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  position: sticky;
-  top: 56px;
-  height: calc(100dvh - 56px);
-}
-
+/* ── Ad Section ── */
 .ad-unit {
   width: 100%;
-  min-height: 250px;
+  min-height: 90px;
 }
 
-.ad-bottom-desktop {
+.ad-bottom {
   margin-top: var(--sp-6);
   padding: var(--sp-4) 0;
-}
-
-.ad-bottom-mobile {
-  display: none;
+  border-top: 1px solid var(--edge);
 }
 
 /* ── Footer ── */
 .footer {
   border-top: 1px solid var(--edge);
-  padding: var(--sp-4) var(--sp-6);
-  text-align: center;
+  background: var(--surface-50);
+  padding: var(--sp-8) var(--sp-6) var(--sp-6);
+}
+
+.footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--sp-8);
+}
+
+.footer h3 {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink-secondary);
+  margin-bottom: var(--sp-3);
+}
+
+.footer-about p {
+  font-size: var(--text-sm);
+  color: var(--ink-tertiary);
+  line-height: 1.7;
+  max-width: 540px;
+}
+
+.footer-tools ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-1) var(--sp-4);
+}
+
+.footer-tools button {
+  font-size: var(--text-xs);
+  color: var(--ink-tertiary);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.footer-tools button:hover {
+  color: var(--amber);
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--edge);
+  padding-top: var(--sp-4);
   font-size: var(--text-xs);
   color: var(--ink-muted);
+  text-align: center;
 }
 
 /* ── Responsive ── */
 
-/* Tablet: narrower sidebars */
-@media (max-width: 1100px) {
-  .ad-sidebar {
-    width: 120px;
-  }
-}
-
 @media (max-width: 768px) {
-  /* Ads — hide desktop ads, show mobile bottom */
-  .ad-sidebar {
-    display: none;
+  /* Hero — compact */
+  .hero {
+    padding: var(--sp-4) var(--sp-3);
   }
 
-  .ad-bottom-desktop {
-    display: none;
+  .hero h1 {
+    font-size: var(--text-lg);
   }
 
-  .ad-bottom-mobile {
-    display: block;
-    padding: var(--sp-3);
-    border-top: 1px solid var(--edge);
+  /* Footer — single column */
+  .footer {
+    padding: var(--sp-6) var(--sp-3) var(--sp-4);
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: var(--sp-6);
   }
 
   /* Header — compact, no overflow */
