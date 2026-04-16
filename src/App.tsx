@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import './App.css'
 import { JsonFormatter } from './tools/JsonFormatter'
 import { DiffTool } from './tools/DiffTool'
@@ -57,6 +57,24 @@ function App() {
   const [activeTool, setActiveTool] = useState<Tool>(() => getToolFromSlug(window.location.pathname))
   const [toast, setToast] = useState<string | null>(null)
 
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(false)
+  const rackRef = useRef<HTMLElement>(null)
+
+  const checkScroll = useCallback(() => {
+    if (rackRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = rackRef.current
+      setCanScrollLeft(scrollLeft > 0)
+      setCanScrollRight(Math.ceil(scrollLeft + clientWidth + 2) < scrollWidth)
+    }
+  }, [])
+
+  useEffect(() => {
+    checkScroll() // Verificación inicial al montar
+    window.addEventListener('resize', checkScroll)
+    return () => window.removeEventListener('resize', checkScroll)
+  }, [checkScroll])
+
   const showToast = useCallback((msg: string) => {
     setToast(msg)
     setTimeout(() => setToast(null), 1500)
@@ -109,19 +127,21 @@ function App() {
             <div className="logo-icon"><p style={{ fontSize: 'large' }}>⚒️</p></div>
           </div>
 
-          <nav className="tool-rack">
-            {tools.map(tool => (
-              <button
-                key={tool.id}
-                className={`tool-tab${activeTool === tool.id ? ' active' : ''}`}
-                onClick={() => navigateToTool(tool.id)}
-              >
-                <span className="tab-icon">{tool.icon}</span>
-                {tool.label}
-                <span className="tab-key">{tool.key}</span>
-              </button>
-            ))}
-          </nav>
+          <div className={`tool-rack-container ${canScrollLeft ? 'can-scroll-left' : ''} ${canScrollRight ? 'can-scroll-right' : ''}`}>
+            <nav className="tool-rack" ref={rackRef} onScroll={checkScroll}>
+              {tools.map(tool => (
+                <button
+                  key={tool.id}
+                  className={`tool-tab${activeTool === tool.id ? ' active' : ''}`}
+                  onClick={() => navigateToTool(tool.id)}
+                >
+                  <span className="tab-icon">{tool.icon}</span>
+                  {tool.label}
+                  <span className="tab-key">{tool.key}</span>
+                </button>
+              ))}
+            </nav>
+          </div>
         </div>
       </header>
 

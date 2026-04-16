@@ -105,15 +105,65 @@
 }
 
 /* ── Tool Rack Tabs ── */
+.tool-rack-container {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+
+.tool-rack-container::before,
+.tool-rack-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 48px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
+
+.tool-rack-container::before {
+  left: 0;
+  background: linear-gradient(to right, var(--base) 10%, transparent);
+}
+
+.tool-rack-container.can-scroll-left::before {
+  opacity: 1;
+}
+
+.tool-rack-container::after {
+  right: 0;
+  background: linear-gradient(to left, var(--base) 10%, transparent);
+}
+
+.tool-rack-container.can-scroll-right::after {
+  opacity: 1;
+}
+
 .tool-rack {
   display: flex;
   gap: var(--sp-1);
   position: relative;
+  overflow-x: auto;
+  min-width: 0;
+  width: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tool-rack::-webkit-scrollbar {
+  display: none;
 }
 
 .tool-tab {
   display: inline-flex;
   align-items: center;
+  flex-shrink: 0;
   gap: var(--sp-2);
   padding: var(--sp-2) var(--sp-4);
   font-size: var(--text-sm);
@@ -500,22 +550,52 @@
 }
 
 /* ── Syntax highlight tokens ── */
-.token-key { color: #7aa2f7; }
-.token-string { color: #9ece6a; }
-.token-number { color: #ff9e64; }
-.token-bool { color: #bb9af7; }
-.token-null { color: var(--ink-muted); font-style: italic; }
-.token-bracket { color: var(--ink-tertiary); }
-.token-comma { color: var(--ink-muted); }
+.token-key {
+  color: #7aa2f7;
+}
+.token-string {
+  color: #9ece6a;
+}
+.token-number {
+  color: #ff9e64;
+}
+.token-bool {
+  color: #bb9af7;
+}
+.token-null {
+  color: var(--ink-muted);
+  font-style: italic;
+}
+.token-bracket {
+  color: var(--ink-tertiary);
+}
+.token-comma {
+  color: var(--ink-muted);
+}
 
 /* ── Code output (converter) ── */
-.code-keyword { color: #bb9af7; }
-.code-type { color: #7aa2f7; }
-.code-name { color: #7dcfff; }
-.code-string { color: #9ece6a; }
-.code-comment { color: var(--ink-muted); font-style: italic; }
-.code-decorator { color: #ff9e64; }
-.code-punct { color: var(--ink-tertiary); }
+.code-keyword {
+  color: #bb9af7;
+}
+.code-type {
+  color: #7aa2f7;
+}
+.code-name {
+  color: #7dcfff;
+}
+.code-string {
+  color: #9ece6a;
+}
+.code-comment {
+  color: var(--ink-muted);
+  font-style: italic;
+}
+.code-decorator {
+  color: #ff9e64;
+}
+.code-punct {
+  color: var(--ink-tertiary);
+}
 
 /* ── JWT Decoder ── */
 .jwt-grid {
@@ -861,11 +941,22 @@ mark.regex-match {
   min-height: 500px;
 }
 
-.sql-keyword { color: #bb9af7; }
-.sql-string { color: #9ece6a; }
-.sql-number { color: #ff9e64; }
-.sql-comment { color: var(--ink-muted); font-style: italic; }
-.sql-function { color: #7aa2f7; }
+.sql-keyword {
+  color: #bb9af7;
+}
+.sql-string {
+  color: #9ece6a;
+}
+.sql-number {
+  color: #ff9e64;
+}
+.sql-comment {
+  color: var(--ink-muted);
+  font-style: italic;
+}
+.sql-function {
+  color: #7aa2f7;
+}
 
 /* ── UUID Generator ── */
 .uuid-controls {
@@ -916,7 +1007,7 @@ mark.regex-match {
   margin: 0;
 }
 
-.uuid-count-input[type=number] {
+.uuid-count-input[type="number"] {
   -moz-appearance: textfield;
 }
 
