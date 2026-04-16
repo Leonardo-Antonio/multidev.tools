@@ -88,6 +88,8 @@ function App() {
     getToolFromSlug(window.location.pathname),
   );
   const [toast, setToast] = useState<string | null>(null);
+  const [isHome, setIsHome] = useState(window.location.pathname === "/");
+  const [isDismissed, setIsDismissed] = useState(false);
 
   const tools = toolsConfig.map((tool) => ({
     ...tool,
@@ -121,8 +123,9 @@ function App() {
 
   const navigateToTool = useCallback((toolId: Tool) => {
     setActiveTool(toolId);
-    const tool = tools.find((t) => t.id === toolId)!;
+    const tool = toolsConfig.find((t) => t.id === toolId)!;
     window.history.pushState(null, "", `/${tool.slug}`);
+    setIsHome(false);
   }, []);
 
   // Sync title, meta, and canonical with active tool — also fixes URL on initial load
@@ -139,8 +142,10 @@ function App() {
 
   // Handle browser back / forward
   useEffect(() => {
-    const onPopState = () =>
+    const onPopState = () => {
       setActiveTool(getToolFromSlug(window.location.pathname));
+      setIsHome(window.location.pathname === "/");
+    };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
@@ -174,7 +179,11 @@ function App() {
             <div className="logo-icon">
               <p
                 style={{ fontSize: "large", cursor: "pointer" }}
-                onClick={() => window.history.pushState(null, "", "/")}
+                onClick={() => {
+                  window.history.pushState(null, "", "/");
+                  setActiveTool(toolsConfig[0].id);
+                  setIsHome(true);
+                }}
               >
                 ⚒️
               </p>
@@ -232,12 +241,23 @@ function App() {
         </div>
       </header>
 
-      <section className="hero">
-        <div className="hero-inner">
-          <h1>{t("header.title")}</h1>
-          <p>{t("header.description")}</p>
-        </div>
-      </section>
+      {isHome && !isDismissed && (
+        <section className="hero" style={{ position: "relative" }}>
+          <button 
+            onClick={() => setIsDismissed(true)}
+            style={{ 
+              position: "absolute", top: "16px", right: "16px", fontSize: "16px", background: "none", border: "none", color: "var(--ink-muted)", cursor: "pointer" 
+            }}
+            title="Close"
+          >
+            ✕
+          </button>
+          <div className="hero-inner" style={{ paddingRight: "40px" }}>
+            <h1>{t("header.title")}</h1>
+            <p>{t("header.description")}</p>
+          </div>
+        </section>
+      )}
 
       <main className="main">
         <div className="tool-description">
