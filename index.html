@@ -1,22 +1,20 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      MultiDevTools — Free Online Developer Tools: JSON Formatter, Diff, JWT
-      Decoder & More
-    </title>
+    <title>MultiDevTools — Free Online Developer Tools</title>
     <meta
       name="description"
-      content="MultiDevTools is a free collection of online developer tools. Format JSON, compare text diffs, decode JWTs, encode/decode Base64, test regex patterns, format SQL, and generate UUIDs — all in your browser, no data sent to servers."
+      content="Collection of free online developer tools. Format JSON, compare Diff, decode JWT, encode Base64, generate UUIDs and more. No data sent to servers."
     />
     <meta
       name="keywords"
       content="JSON formatter, text diff, JWT decoder, Base64 encoder, regex tester, SQL formatter, UUID generator, log prettifier, developer tools, online tools"
     />
-    <link rel="canonical" href="https://multidev.tools" />
+    <link rel="canonical" href="https://www.multidev.tools/" />
 
     <!-- Open Graph -->
     <meta
@@ -25,11 +23,11 @@
     />
     <meta
       property="og:description"
-      content="Format JSON, compare diffs, decode JWTs, encode Base64, test regex, format SQL, and generate UUIDs — free, fast, and private. Everything runs in your browser."
+      content="Format JSON, compare diffs, decode JWTs, encode Base64, test regex, format SQL, and generate UUIDs — free, fast, and private."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://multidev.tools" />
-    <meta property="og:locale" content="es" />
+    <meta property="og:url" content="https://www.multidev.tools/" />
+    <meta property="og:locale" content="en_US" />
 
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
@@ -38,7 +36,7 @@
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "MultiDevTools",
-        "url": "https://multidev.tools",
+        "url": "https://www.multidev.tools/",
         "description": "Free collection of online developer tools. Format JSON, compare diffs, decode JWTs, encode Base64, test regex, format SQL, generate UUIDs, and prettify production logs — all in your browser.",
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "Any",
@@ -69,7 +67,62 @@
     ></script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div
+        class="seo-crawler-content"
+        style="padding: 2rem; font-family: sans-serif; color: #333"
+      >
+        <h1>MultiDevTools — Free Online Developer Tools</h1>
+        <p>
+          Welcome to MultiDevTools, your go-to collection of free online
+          developer tools. We provide essential utilities carefully designed for
+          developers. Everything runs locally in your browser, guaranteeing your
+          privacy as absolutely no data is sent to external servers.
+        </p>
+
+        <h2>Explore Our Developer Tools</h2>
+        <p>Boost your productivity with our suite of utilities:</p>
+        <ul>
+          <li>
+            <a href="/json-formatter">JSON Formatter</a>: Format, validate, and
+            minify your JSON data.
+          </li>
+          <li>
+            <a href="/text-diff">Text Diff</a>: Compare two text sources side by
+            side.
+          </li>
+          <li>
+            <a href="/jwt-decoder">JWT Decoder</a>: Safely decode JSON Web
+            Tokens.
+          </li>
+          <li>
+            <a href="/base64-encoder-decoder">Base64 Encoder / Decoder</a>:
+            Easily translate text to Base64 formats.
+          </li>
+          <li>
+            <a href="/regex-tester">Regex Tester</a>: Test your regular
+            expressions in real time.
+          </li>
+          <li>
+            <a href="/sql-formatter">SQL Formatter</a>: Beautify raw SQL
+            queries.
+          </li>
+          <li>
+            <a href="/uuid-generator">UUID Generator</a>: Quickly generate v4
+            UUIDs bulk.
+          </li>
+          <li>
+            <a href="/log-prettifier">Log Prettifier</a>: Clean up and read your
+            production logs easily.
+          </li>
+        </ul>
+        <p>
+          If you have any questions or simply want a reliable toolkit for
+          everyday development tasks, our utilities are ready to assist you
+          securely.
+        </p>
+      </div>
+    </div>
     <noscript>
       <div
         style="
@@ -80,52 +133,10 @@
           color: #e4e4e9;
         "
       >
-        <h1>MultiDevTools — Free Online Developer Tools</h1>
+        <h2>Enable JavaScript</h2>
         <p>
-          MultiDevTools is a free, privacy-first collection of browser-based
-          developer tools. No data is ever sent to external servers — everything
-          runs locally in your browser.
+          Please enable JavaScript to fully execute these tools interactively.
         </p>
-        <h2>Available Tools</h2>
-        <ul>
-          <li>
-            <strong>JSON Formatter</strong> — Parse, pretty-print, and minify
-            JSON with syntax highlighting.
-          </li>
-          <li>
-            <strong>Text Diff</strong> — Compare two texts side by side and see
-            additions, deletions, and unchanged lines.
-          </li>
-          <li>
-            <strong>JSON to Class</strong> — Convert JSON objects into
-            TypeScript interfaces or Python dataclasses automatically.
-          </li>
-          <li>
-            <strong>JWT Decoder</strong> — Decode JSON Web Tokens to inspect
-            headers, payloads, and expiration status.
-          </li>
-          <li>
-            <strong>Base64 Encoder/Decoder</strong> — Encode and decode Base64
-            strings, with image preview support.
-          </li>
-          <li>
-            <strong>Regex Tester</strong> — Write and test regular expressions
-            with real-time match highlighting and capture groups.
-          </li>
-          <li>
-            <strong>SQL Formatter</strong> — Format and beautify raw SQL queries
-            for better readability.
-          </li>
-          <li>
-            <strong>UUID Generator</strong> — Generate random UUIDs (v4) in bulk
-            with one click.
-          </li>
-          <li>
-            <strong>Log Prettifier</strong> — Format production JSON logs and
-            extract embedded SQL queries for easy reading.
-          </li>
-        </ul>
-        <p>Please enable JavaScript to use these tools.</p>
       </div>
     </noscript>
     <script type="module" src="/src/main.tsx"></script>

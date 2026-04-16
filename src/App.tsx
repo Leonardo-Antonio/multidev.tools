@@ -123,7 +123,7 @@ const tools: {
   },
 ];
 
-const SITE_ORIGIN = "https://multidev.tools";
+const SITE_ORIGIN = "https://www.multidev.tools";
 
 function getToolFromSlug(pathname: string): Tool {
   const slug = pathname.replace(/^\//, "");
@@ -138,8 +138,11 @@ function updateMeta(tool: (typeof tools)[number]) {
   const meta = document.querySelector('meta[name="description"]');
   if (meta) meta.setAttribute("content", tool.description);
 
+  const isRoot = window.location.pathname === "/" && tool.id === tools[0].id;
+  const canonicalUrl = isRoot ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}/${tool.slug}`;
+
   const canonical = document.querySelector('link[rel="canonical"]');
-  if (canonical) canonical.setAttribute("href", `${SITE_ORIGIN}/${tool.slug}`);
+  if (canonical) canonical.setAttribute("href", canonicalUrl);
 
   const ogTitle = document.querySelector('meta[property="og:title"]');
   if (ogTitle) ogTitle.setAttribute("content", tool.title);
@@ -148,7 +151,7 @@ function updateMeta(tool: (typeof tools)[number]) {
   if (ogDesc) ogDesc.setAttribute("content", tool.description);
 
   const ogUrl = document.querySelector('meta[property="og:url"]');
-  if (ogUrl) ogUrl.setAttribute("content", `${SITE_ORIGIN}/${tool.slug}`);
+  if (ogUrl) ogUrl.setAttribute("content", canonicalUrl);
 }
 
 function App() {
