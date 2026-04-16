@@ -104,29 +104,67 @@ function extractSqlValues(obj: unknown, path: string = ''): RawSqlQuery[] {
   return results
 }
 
+function applyKeywordCase(sql: string, targetCase: 'upper' | 'lower' | 'capitalize'): string {
+  const parts = sql.split(/('[^']*')/);
+  for (let i = 0; i < parts.length; i += 2) {
+    parts[i] = parts[i].replace(/\b[a-zA-Z_]+\b/g, word => {
+      const upper = word.toUpperCase();
+      if (SQL_KEYWORDS.has(upper) || SQL_FUNCTIONS.has(upper)) {
+        if (targetCase === 'upper') return upper;
+        if (targetCase === 'lower') return word.toLowerCase();
+        if (targetCase === 'capitalize') return upper.charAt(0) + upper.slice(1).toLowerCase();
+      }
+      return word;
+    });
+  }
+  return parts.join('');
+}
+
+function naiveFormatSql(sql: string, tabWidth: number): string {
+  let res = sql.replace(/\s+/g, ' ').trim();
+  const indent = ' '.repeat(tabWidth);
+  const clauses = [
+    'FROM', 'WHERE', 'AND', 'OR', 'ORDER BY', 'GROUP BY',
+    'HAVING', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'JOIN', 'LIMIT',
+    'OFFSET', 'UNION', 'VALUES', 'SET'
+  ];
+  const clauseRegex = new RegExp(`\\s+(${clauses.join('|')})\\b`, 'gi');
+  
+  res = res.replace(clauseRegex, '\n$1');
+  
+  const indentClauses = new RegExp(`^(${['AND', 'OR', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'JOIN'].join('|')})\\b`, 'i');
+  return res.split('\n').map(line => {
+    if (indentClauses.test(line.trim())) {
+      return indent + line.trim();
+    }
+    return line.trim();
+  }).join('\n');
+}
+
 function formatSqlQuery(
   raw: string,
   dialect: Dialect,
   tabWidth: number,
   keywordCase: 'upper' | 'lower' | 'capitalize',
 ): string {
+  let result = '';
+  let failed = false;
   try {
-    let result = format(raw, {
+    result = format(raw, {
       language: dialect,
       tabWidth,
       keywordCase: keywordCase === 'capitalize' ? 'upper' : keywordCase,
-    })
-    if (keywordCase === 'capitalize') {
-      result = result.replace(/\b[A-Z][A-Z_]{1,}\b/g, word =>
-        SQL_KEYWORDS.has(word) || SQL_FUNCTIONS.has(word)
-          ? word.charAt(0) + word.slice(1).toLowerCase()
-          : word
-      )
-    }
-    return result
+    });
   } catch {
-    return raw.replace(/\s+/g, ' ').trim()
+    failed = true;
+    result = naiveFormatSql(raw, tabWidth);
   }
+
+  if (keywordCase === 'capitalize' || failed) {
+    result = applyKeywordCase(result, keywordCase);
+  }
+  
+  return result;
 }
 
 function cleanObject(obj: unknown): unknown {
