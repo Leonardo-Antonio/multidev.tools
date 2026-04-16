@@ -7,17 +7,22 @@ interface Props {
 
 const SQL_MARKER_PATTERNS = [
   'SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'ALTER', 'DROP',
-  'FROM', 'WHERE', 'JOIN', 'GROUP', 'ORDER', 'HAVING', 'LIMIT',
+  'WITH', 'FROM', 'WHERE', 'JOIN', 'GROUP', 'ORDER', 'HAVING', 'LIMIT',
   'INTO', 'VALUES', 'TABLE', 'SET', 'LIKE', 'BETWEEN',
 ].map(m => new RegExp('\\b' + m + '\\b', 'i'))
 
 function isSqlLike(value: string): boolean {
-  if (value.length < 20) return false
+  if (value.length < 10) return false
   let count = 0
   for (const re of SQL_MARKER_PATTERNS) {
     if (re.test(value)) count++
-    if (count >= 3) return true
   }
+
+  if (count >= 3) return true
+  if (count === 2 && /^\s*(SELECT|INSERT|UPDATE|DELETE|WITH|CREATE|ALTER|DROP)\b/i.test(value)) {
+    return true
+  }
+
   return false
 }
 
