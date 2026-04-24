@@ -7,7 +7,20 @@
         "about_title": "Acerca de MultiDevTools",
         "about_text": "MultiDevTools provee las herramientas esenciales para desarrolladores que funcionan directamente en el navegador. Sin necesidad de registrarse, sin recolección de datos y sin procesamiento en el servidor. Creado por desarrolladores que valoran la velocidad, privacidad y simplicidad en su trabajo del día a día.",
         "tools_title": "Herramientas",
+        "info_title": "Información",
         "copyright": "© {{year}} MultiDevTools. Todas las herramientas se ejecutan del lado del cliente, tus datos nunca salen de tu navegador."
+    },
+    "nav": {
+        "privacy": "Política de Privacidad",
+        "terms": "Términos del Servicio",
+        "about": "Acerca de",
+        "contact": "Contacto"
+    },
+    "consent": {
+        "message": "Usamos cookies y publicidad de terceros (Google AdSense) para mantener MultiDevTools gratuito. Los anuncios pueden usar cookies para personalizar contenido. Las herramientas en sí nunca envían tus datos a ningún servidor.",
+        "accept": "Aceptar",
+        "decline": "Rechazar",
+        "learn_more": "Lee nuestra Política de Privacidad"
     },
     "tools": {
         "logs": {
@@ -54,6 +67,381 @@
             "label": "UUID",
             "title": "Generador MultiUUID Versión 4 En Línea | MultiDevTools",
             "description": "Genera de manera masiva la base de códigos y generadores UUID Versión 4 aleatorios. Haz clic y obtenlo copiado directo en tu portapapeles."
+        }
+    },
+    "guides": {
+        "common": {
+            "how_to_title": "Cómo se usa",
+            "use_cases_title": "Casos de uso comunes",
+            "faq_title": "Preguntas frecuentes",
+            "privacy_note_title": "Privacidad",
+            "privacy_note_text": "Todo se ejecuta localmente en tu navegador. No se envían datos a nuestros servidores, no hay registro ni rastreo de las entradas. Puedes usar esta herramienta con confianza incluso con datos sensibles."
+        },
+        "logs": {
+            "intro": "Los logs de producción suelen ser una sola línea densa de JSON con comillas escapadas, stack traces incrustados e incluso consultas SQL embebidas dentro de valores de tipo string. Leerlos en una terminal es doloroso. El Log Prettifier transforma ese ruido en una vista estructurada y legible, y como bonus detecta y extrae consultas SQL escondidas dentro de los strings, formateándolas como SQL real.",
+            "steps": [
+                "Pega una entrada de log JSON en una sola línea (o una línea de log que contenga JSON) en el panel de entrada.",
+                "La herramienta detecta el JSON automáticamente y lo formatea con resaltado de sintaxis.",
+                "Si un valor de tipo string contiene una consulta SQL (SELECT, INSERT, UPDATE, DELETE, WITH, etc.), se extrae y se formatea en un panel separado.",
+                "Copia el JSON formateado o cualquier SQL extraído con un clic."
+            ],
+            "use_cases": [
+                "Leer logs de servidor desde CloudWatch, Datadog, Loki o Kubernetes.",
+                "Depurar un endpoint lento inspeccionando consultas SQL embebidas.",
+                "Compartir una línea de log con un compañero en formato legible."
+            ],
+            "faq": [
+                {
+                    "q": "¿Mis logs salen del navegador?",
+                    "a": "No. El parseo y formato ocurren íntegramente en tu máquina. Nada se sube."
+                },
+                {
+                    "q": "¿Qué formatos de log se soportan?",
+                    "a": "Cualquier línea que contenga JSON válido. El texto plano fuera del JSON se preserva."
+                },
+                {
+                    "q": "¿Cómo se extrae el SQL?",
+                    "a": "Escaneamos los valores de string buscando palabras clave SQL. Cuando se detectan, la consulta se formatea con la indentación correcta."
+                }
+            ]
+        },
+        "formatter": {
+            "intro": "El JSON está en todas partes — APIs, archivos de configuración, logs, bases de datos NoSQL — pero un blob minificado es imposible de revisar visualmente. El Formateador JSON parsea, valida y embellece cualquier documento JSON con resaltado de sintaxis para que puedas detectar la estructura, los tipos y cualquier sección mal formada al instante. También puedes minificar de vuelta a una sola línea para transmitirlo.",
+            "steps": [
+                "Pega JSON crudo o minificado en el panel de entrada.",
+                "Haz clic en Format para embellecer con indentación de 2 o 4 espacios, o en Minify para colapsar a una sola línea.",
+                "El JSON inválido se resalta con el error exacto del parser y la posición de la línea.",
+                "Copia el resultado con un clic."
+            ],
+            "use_cases": [
+                "Inspeccionar la respuesta de una API desde curl o las DevTools del navegador.",
+                "Limpiar un archivo de configuración JSON antes de hacer commit.",
+                "Validar que un payload generado sea parseable."
+            ],
+            "faq": [
+                {
+                    "q": "¿Mi JSON se envía a algún lado?",
+                    "a": "Nunca. Todo el parser corre en tu navegador usando JSON.parse. Sin telemetría, sin analítica de tu input."
+                },
+                {
+                    "q": "¿Soporta archivos muy grandes?",
+                    "a": "Sí, pero documentos extremadamente grandes (decenas de megabytes) pueden ralentizar el navegador por el resaltado."
+                },
+                {
+                    "q": "¿Y JSON5 o comentarios?",
+                    "a": "Solo se soporta JSON estricto. Comas finales y comentarios serán reportados como errores."
+                }
+            ]
+        },
+        "converter": {
+            "intro": "Generar tipos a partir de un JSON de ejemplo es una de las tareas más repetitivas al integrar una API nueva. El convertidor JSON a Class inspecciona un objeto y emite una interfaz de TypeScript o un dataclass de Python con tipos inferidos — incluyendo objetos anidados, arreglos, campos opcionales y valores nullables. Ahórrate el boilerplate.",
+            "steps": [
+                "Pega un objeto JSON representativo a la izquierda.",
+                "Elige tu lenguaje destino: interfaz TypeScript o dataclass Python.",
+                "La inferencia de tipos se ejecuta automáticamente; los objetos anidados se vuelven sus propios tipos.",
+                "Copia el código generado directo a tu proyecto."
+            ],
+            "use_cases": [
+                "Arrancar tipos para un nuevo endpoint REST o GraphQL.",
+                "Reflejar un esquema del backend en un cliente frontend.",
+                "Generar dataclasses Python a partir de un payload de webhook."
+            ],
+            "faq": [
+                {
+                    "q": "¿Cómo maneja los arreglos de objetos?",
+                    "a": "El convertidor inspecciona el primer elemento y genera un tipo para él, así el arreglo se vuelve Type[] / List[Type]."
+                },
+                {
+                    "q": "¿Maneja valores nulos?",
+                    "a": "Sí. Se representan como nullable en TypeScript (T | null) y Optional[T] en Python."
+                },
+                {
+                    "q": "¿Corre en un servidor?",
+                    "a": "No. Toda la inferencia y generación de código corre localmente en tu navegador."
+                }
+            ]
+        },
+        "sql": {
+            "intro": "Leer una consulta SQL larga en una sola línea es un juego de adivinanza. El Formateador SQL toma SQL crudo o minificado y lo reformatea con indentación consistente, palabras clave en mayúsculas y saltos de línea en los límites de cláusulas — para que veas la estructura SELECT, FROM, JOIN y WHERE de un vistazo. Funciona con SQL estándar, MySQL y PostgreSQL.",
+            "steps": [
+                "Pega una consulta SQL (cualquier dialecto) a la izquierda.",
+                "La consulta se parsea y formatea con resaltado de palabras clave.",
+                "Si el parseo falla, se usa un formateador naive como fallback para que igual obtengas un resultado legible.",
+                "Copia el resultado y pégalo de vuelta a tu editor o migración."
+            ],
+            "use_cases": [
+                "Reformatear una consulta copiada del log de debug de un ORM.",
+                "Limpiar un archivo de migración largo para una revisión de código.",
+                "Hacer legible una consulta compleja basada en CTEs."
+            ],
+            "faq": [
+                {
+                    "q": "¿Qué dialectos soporta?",
+                    "a": "Se reconoce sintaxis SQL estándar, MySQL y PostgreSQL. Las funciones específicas de cada dialecto se preservan tal cual."
+                },
+                {
+                    "q": "¿Ejecuta la consulta?",
+                    "a": "No. No hay conexión con ninguna base de datos. La herramienta solo re-indenta y resalta texto."
+                },
+                {
+                    "q": "¿Toca mis datos?",
+                    "a": "No. La consulta se queda en tu navegador; nada se sube."
+                }
+            ]
+        },
+        "diff": {
+            "intro": "Comparar dos textos — un config antes y después, dos respuestas de API, dos líneas de log — es mucho más rápido con un diff visual. El Diff Checker calcula un diff por línea y resalta adiciones, eliminaciones y líneas sin cambios lado a lado, igual que un diff de Git pero en el navegador, sin salir de tu pestaña.",
+            "steps": [
+                "Pega el texto original en el panel izquierdo y la versión nueva en el panel derecho.",
+                "El diff se recalcula en vivo mientras escribes o pegas.",
+                "Las líneas añadidas se resaltan en verde, las eliminadas en rojo, las sin cambios en color tenue.",
+                "Las estadísticas muestran cuántas líneas se añadieron o eliminaron."
+            ],
+            "use_cases": [
+                "Comparar dos versiones de un config JSON o YAML.",
+                "Revisar un fragmento de código antes de hacer commit.",
+                "Detectar diferencias entre dos respuestas de API."
+            ],
+            "faq": [
+                {
+                    "q": "¿Es un diff por palabra o por línea?",
+                    "a": "Es por línea, que es el estilo de diff más común para código y archivos de configuración."
+                },
+                {
+                    "q": "¿Maneja archivos grandes?",
+                    "a": "Sí, pero con archivos de miles de líneas el navegador puede tardar un momento en renderizar el resultado resaltado."
+                },
+                {
+                    "q": "¿Sube algo?",
+                    "a": "No. Ambos inputs permanecen en la memoria de tu navegador."
+                }
+            ]
+        },
+        "jwt": {
+            "intro": "Los JSON Web Tokens (JWT) son la forma estándar de transportar información de autenticación entre cliente y servidor, pero su formato compacto codificado en base64-url es ilegible. El Decodificador de JWT separa el token en sus partes header, payload y signature y las decodifica para que puedas inspeccionar los claims, el algoritmo y si el token está expirado — todo localmente en tu navegador.",
+            "steps": [
+                "Pega un JWT (en formato header.payload.signature) en el input.",
+                "El header y el payload se decodifican y se muestran como JSON formateado.",
+                "Si el payload contiene un claim exp, se muestra el estado de expiración (válido / expirado).",
+                "La firma se muestra pero no se verifica — eso requiere el secreto o la llave pública."
+            ],
+            "use_cases": [
+                "Depurar un problema de autenticación inspeccionando los claims del token.",
+                "Verificar la expiración de un access token.",
+                "Confirmar el algoritmo y key id (kid) usado para firmar un token."
+            ],
+            "faq": [
+                {
+                    "q": "¿Verifica la firma?",
+                    "a": "No. Verificar una firma requiere el secreto (HS*) o la llave pública (RS*/ES*). Esta herramienta solo decodifica las partes."
+                },
+                {
+                    "q": "¿Mi token se envía a algún lado?",
+                    "a": "No. La decodificación se hace íntegramente en tu navegador. Aun así, nunca pegues tokens de producción en sitios no confiables."
+                },
+                {
+                    "q": "¿Por qué algunos caracteres son distintos en el payload?",
+                    "a": "JWT usa base64url, que reemplaza +/= por -_ sin padding. El decodificador lo maneja automáticamente."
+                }
+            ]
+        },
+        "base64": {
+            "intro": "Base64 es la codificación que se usa donde sea que datos binarios tengan que viajar por un canal de solo texto — data URIs, JWTs, adjuntos de email, payloads de API. La herramienta Base64 convierte texto o archivos a Base64 y de vuelta, con detección automática: pega un string Base64 y se decodifica, pega texto plano y se codifica. Si el valor decodificado es una imagen, se muestra una vista previa.",
+            "steps": [
+                "Pega texto plano a la izquierda para codificarlo en Base64.",
+                "O pega un string Base64 para decodificarlo de vuelta a texto.",
+                "Si el resultado decodificado es una imagen (data URI), se muestra una vista previa automática.",
+                "Copia cualquiera de los dos lados con un clic."
+            ],
+            "use_cases": [
+                "Decodificar un data URI de CSS o de un tag img de HTML.",
+                "Codificar credenciales para un header Basic Authorization.",
+                "Inspeccionar el payload de un mensaje envuelto en Base64."
+            ],
+            "faq": [
+                {
+                    "q": "¿Qué charset se usa?",
+                    "a": "UTF-8. Tanto el codificador como el decodificador manejan correctamente caracteres multi-byte y emojis."
+                },
+                {
+                    "q": "¿Soporta base64url?",
+                    "a": "El por defecto es Base64 estándar. Para tokens base64url estilo JWT, usa el decodificador JWT."
+                },
+                {
+                    "q": "¿Esta herramienta sube mis datos?",
+                    "a": "No. La codificación y decodificación usan APIs nativas del navegador. Nada sale de tu máquina."
+                }
+            ]
+        },
+        "regex": {
+            "intro": "Las expresiones regulares son poderosas pero implacables — un solo caracter mal puesto cambia todo. El Regex Tester te permite construir y depurar un patrón interactivamente: escribe la regex, escribe el string de prueba, y los matches se resaltan en vivo con los grupos de captura listados debajo. Puedes alternar flags como global, case-insensitive, multiline y unicode sin reescribir el patrón.",
+            "steps": [
+                "Escribe tu expresión regular en el input superior.",
+                "Escribe o pega el string objetivo en el área de prueba.",
+                "Los matches se resaltan en tiempo real conforme editas cualquiera de los dos campos.",
+                "Los grupos de captura se listan abajo con el índice y el valor capturado."
+            ],
+            "use_cases": [
+                "Validar el formato de un email, URL o número de teléfono.",
+                "Extraer datos estructurados de un campo de texto libre.",
+                "Refactorizar código con un patrón de buscar y reemplazar."
+            ],
+            "faq": [
+                {
+                    "q": "¿Qué sabor de regex usa?",
+                    "a": "JavaScript regex (ECMAScript), porque el tester corre en tu navegador. Algunos sabores (PCRE, Python re) difieren ligeramente."
+                },
+                {
+                    "q": "¿Soporta grupos con nombre?",
+                    "a": "Sí. Usa (?<name>...) y el grupo nombrado aparecerá en el panel de grupos."
+                },
+                {
+                    "q": "¿Envía mi patrón a algún lado?",
+                    "a": "No. La regex y el string de prueba permanecen en tu navegador."
+                }
+            ]
+        },
+        "uuid": {
+            "intro": "Los UUIDs (Identificadores Únicos Universales) son el identificador de facto para sistemas distribuidos donde necesitas IDs sin coordinación. El Generador de UUIDs produce versión 4 (aleatorio) en lote: elige cuántos necesitas, haz clic en Generar y copia cualquiera con un clic. Útil para sembrar datos de prueba, hacer mock de respuestas de API o generar nuevas claves de base de datos.",
+            "steps": [
+                "Elige cuántos UUIDs quieres generar (de 1 a varios cientos).",
+                "Haz clic en Generar para producir un lote nuevo.",
+                "Haz clic en cualquier UUID de la lista para copiarlo al portapapeles.",
+                "Haz clic en Generar de nuevo para producir un lote nuevo."
+            ],
+            "use_cases": [
+                "Sembrar una base de datos con primary keys realistas.",
+                "Crear IDs de tracking para un script de una sola vez.",
+                "Generar identificadores de fixture para tests unitarios."
+            ],
+            "faq": [
+                {
+                    "q": "¿Qué versión de UUID se genera?",
+                    "a": "Versión 4 (aleatoria). Generada con la API criptográficamente segura crypto.randomUUID cuando está disponible."
+                },
+                {
+                    "q": "¿Están garantizados como únicos?",
+                    "a": "Estadísticamente sí. La probabilidad de colisión para UUIDs v4 es despreciable en la práctica."
+                },
+                {
+                    "q": "¿Se almacenan o registran los UUIDs?",
+                    "a": "No. Se generan en tu navegador y solo existen en tu pantalla."
+                }
+            ]
+        }
+    },
+    "pages": {
+        "privacy": {
+            "title": "Política de Privacidad | MultiDevTools",
+            "heading": "Política de Privacidad",
+            "updated": "Última actualización: 24 de abril de 2026",
+            "sections": [
+                {
+                    "title": "Resumen",
+                    "body": "MultiDevTools es una colección de utilidades para desarrolladores que se ejecutan en el navegador. Los datos que pegas en cualquier herramienta se quedan en tu navegador — no los subimos, almacenamos ni registramos. Mostramos publicidad provista por Google AdSense para mantener el servicio gratuito."
+                },
+                {
+                    "title": "Datos que procesamos",
+                    "body": "Todo el procesamiento ocurre del lado del cliente, en tu navegador web. El texto, JSON, SQL, expresiones regulares, líneas de log, JWTs y strings Base64 que ingresas nunca se transmiten a un servidor controlado por MultiDevTools. No hacemos analítica del contenido de tus inputs."
+                },
+                {
+                    "title": "Cookies y publicidad",
+                    "body": "Usamos Google AdSense para mostrar publicidad. Google y sus socios pueden usar cookies, identificadores de publicidad y tecnologías similares para mostrar anuncios basados en tus visitas previas a este u otros sitios. Puedes controlar la publicidad personalizada en https://adssettings.google.com y aprender más sobre cómo Google usa la información en https://policies.google.com/technologies/partner-sites."
+                },
+                {
+                    "title": "Almacenamiento local",
+                    "body": "Usamos el localStorage del navegador para recordar tus preferencias (selección de idioma, decisión de cookies). Estos datos nunca salen de tu navegador y los puedes borrar en cualquier momento desde la configuración del navegador."
+                },
+                {
+                    "title": "Servicios de terceros",
+                    "body": "Cargamos Google Fonts (Space Grotesk, JetBrains Mono) desde fonts.googleapis.com y el script de Google AdSense desde googlesyndication.com. Estos terceros pueden recolectar información técnica como tu IP y user agent según sus propias políticas."
+                },
+                {
+                    "title": "Niños",
+                    "body": "MultiDevTools está dirigido a desarrolladores y no a menores de 13 años. No recolectamos información personal de niños a sabiendas."
+                },
+                {
+                    "title": "Cambios a esta política",
+                    "body": "Podemos actualizar esta Política de Privacidad ocasionalmente. Los cambios materiales se reflejarán actualizando la fecha en la parte superior de esta página."
+                },
+                {
+                    "title": "Contacto",
+                    "body": "Las preguntas sobre esta política se pueden enviar a leo2001.cmc@gmail.com."
+                }
+            ]
+        },
+        "terms": {
+            "title": "Términos del Servicio | MultiDevTools",
+            "heading": "Términos del Servicio",
+            "updated": "Última actualización: 24 de abril de 2026",
+            "sections": [
+                {
+                    "title": "Aceptación",
+                    "body": "Al usar MultiDevTools aceptas estos Términos del Servicio. Si no estás de acuerdo, por favor no uses el sitio."
+                },
+                {
+                    "title": "Descripción del servicio",
+                    "body": "MultiDevTools provee utilidades gratuitas para desarrolladores basadas en el navegador, incluyendo formato de JSON, diff de texto, decodificación de JWT, conversión Base64, prueba de regex, formato SQL, generación de UUIDs y prettify de logs. Todo el procesamiento ocurre del lado del cliente."
+                },
+                {
+                    "title": "Sin garantía",
+                    "body": "El servicio se provee 'tal cual' sin garantías de ningún tipo, expresas o implícitas. No garantizamos que las herramientas estén libres de errores o disponibles sin interrupción. Siempre valida la salida crítica antes de usarla en producción."
+                },
+                {
+                    "title": "Uso aceptable",
+                    "body": "Aceptas no usar el servicio para fines ilegales, no intentar interrumpir el sitio, no hacer scraping abusivo, ni evadir la publicidad que financia el servicio."
+                },
+                {
+                    "title": "Limitación de responsabilidad",
+                    "body": "En la máxima medida permitida por la ley, MultiDevTools no será responsable por daños directos, indirectos, incidentales o consecuenciales derivados del uso del servicio."
+                },
+                {
+                    "title": "Contenido de terceros",
+                    "body": "La publicidad mostrada en este sitio es provista por Google AdSense y está sujeta a las políticas de publicidad de Google. No respaldamos los productos anunciados."
+                },
+                {
+                    "title": "Cambios",
+                    "body": "Nos reservamos el derecho de modificar estos Términos en cualquier momento. El uso continuado del sitio después de los cambios constituye la aceptación de los nuevos Términos."
+                },
+                {
+                    "title": "Contacto",
+                    "body": "Las preguntas sobre estos Términos se pueden enviar a leo2001.cmc@gmail.com."
+                }
+            ]
+        },
+        "about": {
+            "title": "Acerca de | MultiDevTools",
+            "heading": "Acerca de MultiDevTools",
+            "sections": [
+                {
+                    "title": "¿Qué es MultiDevTools?",
+                    "body": "MultiDevTools es un taller de una sola página con utilidades esenciales para desarrolladores de software. En vez de saltar entre cinco herramientas web distintas — una para formatear JSON, otra para decodificar JWTs, otra para hacer diff de texto — las tienes todas en un solo lugar, con una interfaz consistente y cero datos saliendo de tu navegador."
+                },
+                {
+                    "title": "Por qué lo construimos",
+                    "body": "La mayoría de las herramientas web para desarrolladores o pasan los inputs por un servidor (lo que es un problema de privacidad con datos sensibles como JWTs o logs de producción) o están envueltas en publicidad invasiva y trackers. MultiDevTools ejecuta cada transformación localmente en tu navegador usando APIs estándar de JavaScript. El único script de tercero es Google AdSense, que mantiene el servicio gratuito."
+                },
+                {
+                    "title": "Qué incluye",
+                    "body": "El toolkit incluye actualmente: Formateador y Validador JSON, Convertidor JSON a clases TypeScript y Python, Formateador SQL, Prettifier de logs JSON con extracción de SQL embebido, Diff de Texto, Decodificador de JWT, Codificador y Decodificador Base64, Probador y Depurador de Regex, y Generador de UUID v4."
+                },
+                {
+                    "title": "Privacidad por diseño",
+                    "body": "Ninguna herramienta envía los datos que pegas a ningún servidor controlado por MultiDevTools. No hay cuentas, no hay datos personales, no hay rastreo de tus inputs. Consulta la Política de Privacidad para detalles sobre cookies y publicidad."
+                },
+                {
+                    "title": "Feedback abierto",
+                    "body": "MultiDevTools está construido y mantenido por un desarrollador independiente. Si tienes ideas para nuevas herramientas, encuentras un bug o quieres sugerir mejoras, contáctanos por la página de Contacto."
+                }
+            ]
+        },
+        "contact": {
+            "title": "Contacto | MultiDevTools",
+            "heading": "Contacto",
+            "intro": "¿Tienes feedback, un reporte de bug o una idea para una herramienta que deberíamos añadir? Nos encantaría saber de ti.",
+            "email_label": "Correo",
+            "email": "leo2001.cmc@gmail.com",
+            "response_note": "Por favor permite unos días hábiles para una respuesta. Somos un proyecto independiente y leemos cada mensaje."
         }
     }
 }

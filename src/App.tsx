@@ -11,6 +11,9 @@ import { SqlFormatter } from "./tools/SqlFormatter";
 import { UuidGenerator } from "./tools/UuidGenerator";
 import { LogPrettifier } from "./tools/LogPrettifier";
 import { AdUnit } from "./components/AdUnit";
+import { ToolGuide } from "./components/ToolGuide";
+import { InfoPage } from "./components/InfoPage";
+import { CookieConsent } from "./components/CookieConsent";
 
 type Tool =
   | "formatter"
@@ -22,6 +25,12 @@ type Tool =
   | "sql"
   | "uuid"
   | "logs";
+
+type InfoPageKey = "privacy" | "terms" | "about" | "contact";
+
+type Route =
+  | { kind: "tool"; tool: Tool }
+  | { kind: "page"; page: InfoPageKey };
 
 const toolsConfig: {
   id: Tool;
@@ -40,55 +49,61 @@ const toolsConfig: {
   { id: "uuid", icon: "#", key: "9", slug: "uuid-generator" },
 ];
 
+const infoPagesConfig: { id: InfoPageKey; slug: string }[] = [
+  { id: "privacy", slug: "privacy" },
+  { id: "terms", slug: "terms" },
+  { id: "about", slug: "about" },
+  { id: "contact", slug: "contact" },
+];
+
 const SITE_ORIGIN = "https://www.multidev.tools";
 
-function getToolFromSlug(pathname: string): Tool {
-  const slug = pathname.replace(/^\//, "");
-  if (!slug) return toolsConfig[0].id;
+function getRouteFromPath(pathname: string): Route {
+  const slug = pathname.replace(/^\//, "").replace(/\/$/, "");
+  if (!slug) return { kind: "tool", tool: toolsConfig[0].id };
   const tool = toolsConfig.find((t) => t.slug === slug);
-  return tool?.id ?? toolsConfig[0].id;
+  if (tool) return { kind: "tool", tool: tool.id };
+  const page = infoPagesConfig.find((p) => p.slug === slug);
+  if (page) return { kind: "page", page: page.id };
+  return { kind: "tool", tool: toolsConfig[0].id };
 }
 
 function updateMeta(
-  toolId: string,
-  toolSlug: string,
-  toolTitle: string,
-  toolDescription: string,
-  lang: string
+  title: string,
+  description: string,
+  canonicalUrl: string,
+  lang: string,
 ) {
-  document.title = toolTitle;
+  document.title = title;
   document.documentElement.lang = lang;
 
   const meta = document.querySelector('meta[name="description"]');
-  if (meta) meta.setAttribute("content", toolDescription);
-
-  const isRoot = window.location.pathname === "/" && toolId === toolsConfig[0].id;
-  const canonicalUrl = isRoot ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}/${toolSlug}`;
+  if (meta) meta.setAttribute("content", description);
 
   const canonical = document.querySelector('link[rel="canonical"]');
   if (canonical) canonical.setAttribute("href", canonicalUrl);
 
   const ogTitle = document.querySelector('meta[property="og:title"]');
-  if (ogTitle) ogTitle.setAttribute("content", toolTitle);
+  if (ogTitle) ogTitle.setAttribute("content", title);
 
   const ogDesc = document.querySelector('meta[property="og:description"]');
-  if (ogDesc) ogDesc.setAttribute("content", toolDescription);
+  if (ogDesc) ogDesc.setAttribute("content", description);
 
   const ogUrl = document.querySelector('meta[property="og:url"]');
   if (ogUrl) ogUrl.setAttribute("content", canonicalUrl);
 
   const ogLocale = document.querySelector('meta[property="og:locale"]');
-  if (ogLocale) ogLocale.setAttribute("content", lang === "es" ? "es_ES" : "en_US");
+  if (ogLocale)
+    ogLocale.setAttribute("content", lang === "es" ? "es_ES" : "en_US");
 }
 
 function App() {
   const { t, i18n } = useTranslation();
 
-  const [activeTool, setActiveTool] = useState<Tool>(() =>
-    getToolFromSlug(window.location.pathname),
+  const [route, setRoute] = useState<Route>(() =>
+    getRouteFromPath(window.location.pathname),
   );
   const [toast, setToast] = useState<string | null>(null);
-  const [isHome, setIsHome] = useState(window.location.pathname === "/");
   const [isDismissed, setIsDismissed] = useState(false);
 
   const tools = toolsConfig.map((tool) => ({
@@ -111,7 +126,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    checkScroll(); // Verificación inicial al montar
+    checkScroll();
     window.addEventListener("resize", checkScroll);
     return () => window.removeEventListener("resize", checkScroll);
   }, [checkScroll]);
@@ -122,37 +137,55 @@ function App() {
   }, []);
 
   const navigateToTool = useCallback((toolId: Tool) => {
-    setActiveTool(toolId);
+    setRoute({ kind: "tool", tool: toolId });
     const tool = toolsConfig.find((t) => t.id === toolId)!;
     window.history.pushState(null, "", `/${tool.slug}`);
-    setIsHome(false);
+    window.scrollTo(0, 0);
   }, []);
 
-  // Sync title, meta, and canonical with active tool — also fixes URL on initial load
-  useEffect(() => {
-    const tool = tools.find((t) => t.id === activeTool)!;
-    updateMeta(tool.id, tool.slug, tool.title, tool.description, i18n.language);
+  const navigateToPage = useCallback((pageId: InfoPageKey) => {
+    setRoute({ kind: "page", page: pageId });
+    const page = infoPagesConfig.find((p) => p.id === pageId)!;
+    window.history.pushState(null, "", `/${page.slug}`);
+    window.scrollTo(0, 0);
+  }, []);
 
-    const isRootAndDefault =
-      window.location.pathname === "/" && activeTool === toolsConfig[0].id;
-    if (!isRootAndDefault && window.location.pathname !== `/${tool.slug}`) {
-      window.history.replaceState(null, "", `/${tool.slug}`);
+  // Sync title, meta, and canonical with active route
+  useEffect(() => {
+    if (route.kind === "tool") {
+      const tool = tools.find((t) => t.id === route.tool)!;
+      const isRootAndDefault =
+        window.location.pathname === "/" && tool.id === toolsConfig[0].id;
+      const canonicalUrl = isRootAndDefault
+        ? `${SITE_ORIGIN}/`
+        : `${SITE_ORIGIN}/${tool.slug}`;
+      updateMeta(tool.title, tool.description, canonicalUrl, i18n.language);
+
+      if (!isRootAndDefault && window.location.pathname !== `/${tool.slug}`) {
+        window.history.replaceState(null, "", `/${tool.slug}`);
+      }
+    } else {
+      const page = infoPagesConfig.find((p) => p.id === route.page)!;
+      const title = t(`pages.${page.id}.title`);
+      const heading = t(`pages.${page.id}.heading`);
+      const canonicalUrl = `${SITE_ORIGIN}/${page.slug}`;
+      updateMeta(title, heading, canonicalUrl, i18n.language);
     }
-  }, [activeTool, tools, i18n.language]);
+  }, [route, tools, i18n.language, t]);
 
   // Handle browser back / forward
   useEffect(() => {
     const onPopState = () => {
-      setActiveTool(getToolFromSlug(window.location.pathname));
-      setIsHome(window.location.pathname === "/");
+      setRoute(getRouteFromPath(window.location.pathname));
     };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts (only on tool routes)
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      if (route.kind !== "tool") return;
       if (
         e.target instanceof HTMLTextAreaElement ||
         e.target instanceof HTMLInputElement
@@ -167,9 +200,17 @@ function App() {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [navigateToTool]);
+  }, [navigateToTool, tools, route.kind]);
 
-  const activeToolData = tools.find((t) => t.id === activeTool)!;
+  const isToolRoute = route.kind === "tool";
+  const activeToolData = isToolRoute
+    ? tools.find((t) => t.id === route.tool)!
+    : null;
+  const showHero =
+    isToolRoute &&
+    window.location.pathname === "/" &&
+    route.tool === toolsConfig[0].id &&
+    !isDismissed;
 
   return (
     <div className="app">
@@ -181,8 +222,8 @@ function App() {
                 style={{ fontSize: "large", cursor: "pointer" }}
                 onClick={() => {
                   window.history.pushState(null, "", "/");
-                  setActiveTool(toolsConfig[0].id);
-                  setIsHome(true);
+                  setRoute({ kind: "tool", tool: toolsConfig[0].id });
+                  window.scrollTo(0, 0);
                 }}
               >
                 ⚒️
@@ -194,7 +235,9 @@ function App() {
             {canScrollLeft && (
               <button
                 className="scroll-btn scroll-btn-left"
-                onClick={() => rackRef.current?.scrollBy({ left: -200, behavior: "smooth" })}
+                onClick={() =>
+                  rackRef.current?.scrollBy({ left: -200, behavior: "smooth" })
+                }
                 aria-label="Scroll left"
               >
                 ‹
@@ -205,7 +248,9 @@ function App() {
               {tools.map((tool) => (
                 <button
                   key={tool.id}
-                  className={`tool-tab${activeTool === tool.id ? " active" : ""}`}
+                  className={`tool-tab${
+                    isToolRoute && route.tool === tool.id ? " active" : ""
+                  }`}
                   onClick={() => navigateToTool(tool.id)}
                 >
                   <span className="tab-icon">{tool.icon}</span>
@@ -218,7 +263,9 @@ function App() {
             {canScrollRight && (
               <button
                 className="scroll-btn scroll-btn-right"
-                onClick={() => rackRef.current?.scrollBy({ left: 200, behavior: "smooth" })}
+                onClick={() =>
+                  rackRef.current?.scrollBy({ left: 200, behavior: "smooth" })
+                }
                 aria-label="Scroll right"
               >
                 ›
@@ -226,14 +273,14 @@ function App() {
             )}
           </div>
 
-          <button 
-            className="btn btn-ghost" 
+          <button
+            className="btn btn-ghost"
             onClick={() => {
               const nextLang = i18n.language === "en" ? "es" : "en";
               i18n.changeLanguage(nextLang);
               localStorage.setItem("app_lang", nextLang);
-            }} 
-            style={{ marginLeft: "10px", minWidth: "40px" }} 
+            }}
+            style={{ marginLeft: "10px", minWidth: "40px" }}
             title="Toggle Language"
           >
             {i18n.language === "en" ? "ES" : "EN"}
@@ -241,12 +288,19 @@ function App() {
         </div>
       </header>
 
-      {isHome && !isDismissed && (
+      {showHero && (
         <section className="hero" style={{ position: "relative" }}>
-          <button 
+          <button
             onClick={() => setIsDismissed(true)}
-            style={{ 
-              position: "absolute", top: "16px", right: "16px", fontSize: "16px", background: "none", border: "none", color: "var(--ink-muted)", cursor: "pointer" 
+            style={{
+              position: "absolute",
+              top: "16px",
+              right: "16px",
+              fontSize: "16px",
+              background: "none",
+              border: "none",
+              color: "var(--ink-muted)",
+              cursor: "pointer",
             }}
             title="Close"
           >
@@ -260,28 +314,44 @@ function App() {
       )}
 
       <main className="main">
-        <div className="tool-description">
-          <h2>
-            {activeToolData.icon} {activeToolData.label}
-          </h2>
-          <p>{activeToolData.description}</p>
-        </div>
+        {isToolRoute && activeToolData ? (
+          <>
+            <div className="tool-description">
+              <h2>
+                {activeToolData.icon} {activeToolData.label}
+              </h2>
+              <p>{activeToolData.description}</p>
+            </div>
 
-        <div className="tool-panel" key={activeTool}>
-          {activeTool === "formatter" && <JsonFormatter onCopy={showToast} />}
-          {activeTool === "diff" && <DiffTool onCopy={showToast} />}
-          {activeTool === "converter" && <JsonToClass onCopy={showToast} />}
-          {activeTool === "jwt" && <JwtDecoder onCopy={showToast} />}
-          {activeTool === "base64" && <Base64Tool onCopy={showToast} />}
-          {activeTool === "regex" && <RegexTester onCopy={showToast} />}
-          {activeTool === "sql" && <SqlFormatter onCopy={showToast} />}
-          {activeTool === "uuid" && <UuidGenerator onCopy={showToast} />}
-          {activeTool === "logs" && <LogPrettifier onCopy={showToast} />}
-        </div>
+            <div className="tool-panel" key={route.tool}>
+              {route.tool === "formatter" && (
+                <JsonFormatter onCopy={showToast} />
+              )}
+              {route.tool === "diff" && <DiffTool onCopy={showToast} />}
+              {route.tool === "converter" && (
+                <JsonToClass onCopy={showToast} />
+              )}
+              {route.tool === "jwt" && <JwtDecoder onCopy={showToast} />}
+              {route.tool === "base64" && <Base64Tool onCopy={showToast} />}
+              {route.tool === "regex" && <RegexTester onCopy={showToast} />}
+              {route.tool === "sql" && <SqlFormatter onCopy={showToast} />}
+              {route.tool === "uuid" && <UuidGenerator onCopy={showToast} />}
+              {route.tool === "logs" && <LogPrettifier onCopy={showToast} />}
+            </div>
 
-        <div className="ad-bottom">
-          <AdUnit slot="bottomDesktop" format="horizontal" />
-        </div>
+            <ToolGuide toolId={route.tool} />
+
+            <div className="ad-bottom">
+              <AdUnit
+                key={`ad-${route.tool}`}
+                slot="bottomDesktop"
+                format="horizontal"
+              />
+            </div>
+          </>
+        ) : route.kind === "page" ? (
+          <InfoPage pageKey={route.page} />
+        ) : null}
       </main>
 
       <footer className="footer">
@@ -302,11 +372,30 @@ function App() {
               ))}
             </ul>
           </div>
+          <div className="footer-info">
+            <h3>{t("footer.info_title")}</h3>
+            <ul>
+              {infoPagesConfig.map((page) => (
+                <li key={page.id}>
+                  <button onClick={() => navigateToPage(page.id)}>
+                    {t(`nav.${page.id}`)}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
           <div className="footer-bottom">
-            <p>{t("footer.copyright").replace("{{year}}", new Date().getFullYear().toString())}</p>
+            <p>
+              {t("footer.copyright").replace(
+                "{{year}}",
+                new Date().getFullYear().toString(),
+              )}
+            </p>
           </div>
         </div>
       </footer>
+
+      <CookieConsent onNavigate={(slug) => navigateToPage(slug as InfoPageKey)} />
 
       {toast && <div className="copied-toast">{toast}</div>}
     </div>

@@ -1,48 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://multidev.tools/json-formatter</loc>
-    <changefreq>monthly</changefreq>
+    <loc>https://www.multidev.tools/</loc>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://multidev.tools/text-diff</loc>
+    <loc>https://www.multidev.tools/log-prettifier</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.multidev.tools/json-formatter</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.multidev.tools/json-to-class</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://multidev.tools/json-to-class</loc>
+    <loc>https://www.multidev.tools/sql-formatter</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://multidev.tools/jwt-decoder</loc>
+    <loc>https://www.multidev.tools/text-diff</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://multidev.tools/base64-encoder-decoder</loc>
+    <loc>https://www.multidev.tools/jwt-decoder</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://multidev.tools/regex-tester</loc>
+    <loc>https://www.multidev.tools/base64-encoder-decoder</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://multidev.tools/sql-formatter</loc>
+    <loc>https://www.multidev.tools/regex-tester</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://multidev.tools/uuid-generator</loc>
+    <loc>https://www.multidev.tools/uuid-generator</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://multidev.tools/log-prettifier</loc>
+    <loc>https://www.multidev.tools/about</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.multidev.tools/privacy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://www.multidev.tools/terms</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://www.multidev.tools/contact</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
   </url>
 </urlset>
